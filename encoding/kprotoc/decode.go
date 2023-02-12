@@ -2,10 +2,16 @@ package kprotoc
 
 import "io"
 
-type Decode struct {
+const batch = 1024
+
+type Decoder struct {
 	r io.Reader
 }
 
-func NewDecoder(r io.Reader) *Decode {
-	return &Decode{r: r}
+func NewDecoder(r io.Reader) *Decoder {
+	return &Decoder{r: r}
+}
+
+func (d *Decoder) Decode() {
+
 }
