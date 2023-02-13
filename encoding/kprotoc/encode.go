@@ -16,25 +16,27 @@ func NewEncoder(w io.Writer) *Encoder {
 // Encode: bfs to encode the data
 func (e *Encoder) Encode(v interface{}) error {
 	obj := reflect.ValueOf(v).Addr().Elem()
+	data := []byte{}
 	eles := []reflect.Value{obj}
 	for len(eles) > 0 {
-		obj := eles[0]
-		switch GetType(obj) {
-		case Varint:
-			// todo varint
-		case Bit64:
-			//todo bit64
-		case StartGroup:
-			//todo startGroup
-		case EndGroup:
-			//todo endgroup
-		case Bit32:
-			//todo bit32
-		case Struct:
-			// todo struct
+		for i := 0; i < len(eles); i++ {
+			obj := eles[i]
+			switch GetType(obj) {
+			case Varint:
+				// todo varint
+				data = append(data, EncodeVarint(GetTag(i+1, GetType(obj)))...)
+			case Bit64:
+				//todo bit64
+			case StartGroup:
+				//todo startGroup
+			case EndGroup:
+				//todo endgroup
+			case Bit32:
+				//todo bit32
+			case Struct:
+				// todo struct
+			}
 		}
-
-		eles = eles[1:]
 	}
 }
 

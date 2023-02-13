@@ -23,6 +23,37 @@ type Field struct {
 	value       interface{}
 }
 
+// EncodeVarint: encode varint type to []byte
+func EncodeVarint(v interface{}) []byte {
+	p := reflect.TypeOf(v)
+	data := []byte{}
+	switch p.Kind() {
+	case reflect.Int32:
+		// todo encode
+	case reflect.Int64:
+		// todo encode
+	case reflect.Bool:
+		//todo encode
+	case reflect.Int16:
+		//todo encode
+	case reflect.Int:
+		// todo encode
+	case reflect.Int8:
+		// todo encode
+	case reflect.Uint:
+		// todo encode
+	case reflect.Uint8:
+		// todo encode
+	case reflect.Uint16:
+		// todo encode
+	case reflect.Uint32:
+		// todo encode
+	case reflect.Uint64:
+		// todo encode
+	}
+	return data
+}
+
 // GetType: get v's type to encode
 func GetType(v interface{}) Type {
 	p := reflect.ValueOf(v).Addr().Elem()
