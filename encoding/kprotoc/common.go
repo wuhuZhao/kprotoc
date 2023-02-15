@@ -1,6 +1,7 @@
 package kprotoc
 
 import (
+	"errors"
 	"reflect"
 )
 
@@ -24,34 +25,115 @@ type Field struct {
 }
 
 // EncodeVarint: encode varint type to []byte
-func EncodeVarint(v interface{}) []byte {
+func EncodeVarint(v interface{}) ([]byte, error) {
 	p := reflect.TypeOf(v)
 	data := []byte{}
+	var fill func(real int)
+	fill = func(real int) {
+		for real > 0 {
+			if real >= 1<<7 {
+				data = append(data, byte((1<<7)|(real&((1<<7)-1))))
+			} else {
+				data = append(data, byte(real&((1<<7)-1)))
+			}
+			real >>= 7
+		}
+	}
+	var fillN func(real uint)
+	fillN = func(real uint) {
+		for real > 0 {
+			if real >= 1<<7 {
+
+				data = append(data, byte((1<<7)|(real&((1<<7)-1))))
+			} else {
+				data = append(data, byte(real&((1<<7)-1)))
+			}
+			real >>= 7
+		}
+	}
 	switch p.Kind() {
 	case reflect.Int32:
-		// todo encode
+		real, ok := v.(int32)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Int32")
+		}
+		fill(int(real))
 	case reflect.Int64:
 		// todo encode
+		real, ok := v.(int64)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Int64")
+		}
+		fill(int(real))
 	case reflect.Bool:
 		//todo encode
+		real, ok := v.(bool)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Bool")
+		}
+		if real {
+			fill(1)
+		} else {
+			fill(0)
+		}
 	case reflect.Int16:
 		//todo encode
+		real, ok := v.(int16)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Int16")
+		}
+		fill(int(real))
 	case reflect.Int:
 		// todo encode
+		real, ok := v.(int)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Int")
+		}
+		fill(real)
 	case reflect.Int8:
 		// todo encode
+		real, ok := v.(int8)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Int8")
+		}
+		fill(int(real))
 	case reflect.Uint:
 		// todo encode
+		real, ok := v.(uint)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Uint")
+		}
+		fillN(real)
 	case reflect.Uint8:
 		// todo encode
+		real, ok := v.(uint8)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Uint8")
+		}
+		fillN(uint(real))
 	case reflect.Uint16:
 		// todo encode
+		real, ok := v.(uint16)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Uint16")
+		}
+		fillN(uint(real))
 	case reflect.Uint32:
 		// todo encode
+		real, ok := v.(uint32)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Uint32")
+		}
+		fillN(uint(real))
 	case reflect.Uint64:
 		// todo encode
+		real, ok := v.(uint64)
+		if !ok {
+			return nil, errors.New("p.kind() can't not cast to Uint64")
+		}
+		fillN(uint(real))
 	}
-	return data
+	return data, nil
 }
 
 // GetType: get v's type to encode

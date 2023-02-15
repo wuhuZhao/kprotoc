@@ -24,7 +24,11 @@ func (e *Encoder) Encode(v interface{}) error {
 			switch GetType(obj) {
 			case Varint:
 				// todo varint
-				data = append(data, EncodeVarint(GetTag(i+1, GetType(obj)))...)
+				b, err := EncodeVarint(GetTag(i+1, GetType(obj)))
+				if err != nil {
+					return err
+				}
+				data = append(data, b...)
 			case Bit64:
 				//todo bit64
 			case StartGroup:
@@ -38,6 +42,7 @@ func (e *Encoder) Encode(v interface{}) error {
 			}
 		}
 	}
+	return nil
 }
 
 // getLength: dfs to get length
