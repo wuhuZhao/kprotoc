@@ -2,7 +2,9 @@ package kprotoc
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
+	"unsafe"
 )
 
 type Type int
@@ -22,6 +24,20 @@ type Field struct {
 	writeType   Type
 	length      int
 	value       interface{}
+}
+
+// EncodeBit64: encode float64 to 64-bit
+func EncodeBit64(v interface{}) ([]byte, error) {
+	f := v.(float64)
+	s := fmt.Sprintf("%f", f)
+	return *(*[]byte)(unsafe.Pointer(&s)), nil
+}
+
+// EncodeBit32: encode float32 to 32-bit
+func EncodeBit32(v interface{}) ([]byte, error) {
+	f := v.(float32)
+	s := fmt.Sprintf("%f", f)
+	return *(*[]byte)(unsafe.Pointer(&s)), nil
 }
 
 // EncodeVarint: encode varint type to []byte
