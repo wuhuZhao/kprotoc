@@ -154,7 +154,7 @@ func EncodeVarint(v interface{}) ([]byte, error) {
 
 // GetType: get v's type to encode
 func GetType(v interface{}) Type {
-	p := reflect.ValueOf(v).Addr().Elem()
+	p := reflect.ValueOf(v)
 	switch p.Kind() {
 	case reflect.Int32, reflect.Int64, reflect.Uint32, reflect.Uint64, reflect.Bool, reflect.Int8, reflect.Int16, reflect.Uint16, reflect.Uint8:
 		return Varint
