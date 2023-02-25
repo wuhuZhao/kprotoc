@@ -26,6 +26,12 @@ type Field struct {
 	value       interface{}
 }
 
+func EncodeLengthDelimited(v interface{}) ([]byte, error) {
+	s := reflect.ValueOf(v).String()
+	data := []byte(s)
+	return data, nil
+}
+
 // EncodeBit64: encode float64 to 64-bit
 func EncodeBit64(v interface{}) ([]byte, error) {
 	f := v.(float64)
@@ -156,7 +162,7 @@ func EncodeVarint(v interface{}) ([]byte, error) {
 func GetType(v interface{}) Type {
 	p := reflect.ValueOf(v)
 	switch p.Kind() {
-	case reflect.Int32, reflect.Int64, reflect.Uint32, reflect.Uint64, reflect.Bool, reflect.Int8, reflect.Int16, reflect.Uint16, reflect.Uint8:
+	case reflect.Int32, reflect.Int64, reflect.Uint32, reflect.Uint64, reflect.Bool, reflect.Int8, reflect.Int16, reflect.Uint16, reflect.Uint8, reflect.Int:
 		return Varint
 	case reflect.Float64:
 		return Bit64
